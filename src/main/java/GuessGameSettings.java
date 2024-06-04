@@ -21,7 +21,55 @@ public class GuessGameSettings {
     return upperBound;
   }
 
-  private int askForSetting(Scanner scanner, String setting, int settingValue) {
+  
+  // configure settings
+  public void configure(Scanner scanner) {
+    System.out.println();
+
+    // display settings message
+    System.out.println("CONFIGURE " + "GAME SETTINGS");
+
+    // clear buffer
+    scanner.nextLine();
+
+    // ask user for max attempts and set new max attempts
+    maxAttempts = _promptForSetting(scanner, "max attempts", maxAttempts);
+
+    // ask user for lower bound and update setting
+    lowerBound = _promptForSetting(scanner, "lower bound", lowerBound);
+
+    // ask user for upper bound and update
+    upperBound = _promptForSetting(scanner, "upper bound", upperBound);
+
+    System.out.println("Successfully configured game settings ");
+  }
+
+  public void showSettings(Scanner scanner) {
+    // display current settings
+    System.out.println(" ___________________");
+    System.out.println("|");
+    System.out.println("| GAME SETTINGS     ");
+    System.out.println("|");
+    System.out.println("|  Max Attempts: " + maxAttempts);
+    System.out.println("|  Lower Bound:  " + lowerBound);
+    System.out.println("|  Upper Bound:  " + upperBound);
+    System.out.println("|___________________");
+
+    System.out.println();
+
+    // ask user if they want to change settings
+    System.out.print("Would you like to change the settings? (y/n): ");
+
+    // get input
+    String input = scanner.nextLine().toString();
+
+    // if user input is y, call configure method
+    if (input.toLowerCase().equals("y")) {
+      configure(scanner);
+    }
+  }
+
+  private int _promptForSetting(Scanner scanner, String setting, int settingValue) {
     // display setting information
     System.out.println(":: " + setting.toUpperCase() + ": " + settingValue);
     System.out.println("   Press Enter to Choose Default");
@@ -60,51 +108,5 @@ public class GuessGameSettings {
     return newValue;
   }
 
-  // configure settings
-  public void configure(Scanner scanner) {
-    System.out.println();
-
-    // display settings message
-    System.out.println("CONFIGURE " + "GAME SETTINGS");
-
-    // clear buffer
-    scanner.nextLine();
-
-    // ask user for max attempts and set new max attempts
-    maxAttempts = askForSetting(scanner, "max attempts", maxAttempts);
-
-    // ask user for lower bound and update setting
-    lowerBound = askForSetting(scanner, "lower bound", lowerBound);
-
-    // ask user for upper bound and update
-    upperBound = askForSetting(scanner, "upper bound", upperBound);
-
-    System.out.println("Successfully configured game settings ");
-  }
-
-  public void showSettings(Scanner scanner) {
-    // display current settings
-    System.out.println(" ___________________");
-    System.out.println("|");
-    System.out.println("| GAME SETTINGS     ");
-    System.out.println("|");
-    System.out.println("|  Max Attempts: " + maxAttempts);
-    System.out.println("|  Lower Bound:  " + lowerBound);
-    System.out.println("|  Upper Bound:  " + upperBound);
-    System.out.println("|___________________");
-
-    System.out.println();
-
-    // ask user if they want to change settings
-    System.out.print("Would you like to change the settings? (y/n): ");
-
-    // get input
-    String input = scanner.nextLine().toString();
-
-    // if user input is y, call configure method
-    if (input.toLowerCase().equals("y")) {
-      configure(scanner);
-    }
-  }
 
 }
