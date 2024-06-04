@@ -13,6 +13,7 @@ public class GuessGame {
   GuessGameSettings gameSettings = new GuessGameSettings();
 
   // sleep durations
+  // for animated print outs
   private int sleepLong = 1500;
   private int sleepMedium = 500;
   private int sleepShort = 100;
@@ -28,19 +29,23 @@ public class GuessGame {
     // create scanner
     Scanner scanner = new Scanner(System.in);
 
-    // show game settings
+    // show game settings to the console
     gameSettings.showSettings(scanner);
 
     System.out.println();
 
-    // start the game
-    startGame(scanner);
+    // run the game loop
+    runGameLoop(scanner);
 
+    // dispose scanner
     scanner.close();
-
   }
 
-  private void startGame(Scanner scanner) {
+  /* 
+  Create a game loop to provide multiple instances of the game
+   so the player can retry after winning or failing
+   */
+  private void runGameLoop(Scanner scanner) {
     // game loop
     while (true) {
       System.out.println();
@@ -54,21 +59,24 @@ public class GuessGame {
       if (scanner.nextLine().equals("")) {
         System.out.println();
 
-        // start game instance
+        // start instance of the guessing game
         gameInstance(scanner);
       }
-      // quit game
+      // if they press anything else, quit game
       else {
         break;
       }
     }
   }
 
+  /*
+  Handles the game logic
+  */
   private void gameInstance(Scanner scanner) {
     // generate random number with game settings bounds
     int randomNumber = getRandomNumber(gameSettings.getUpperBound(), gameSettings.getLowerBound());
 
-    // display tandom number message
+    // display random number message
     animatePrint(
         "I'm thinking of a number between " + gameSettings.getLowerBound() + " and " + gameSettings.getUpperBound(),
         sleepLong);
@@ -78,9 +86,18 @@ public class GuessGame {
 
     // handle the guessing process
     handleGuesses(scanner, randomNumber, trials);
-
   }
 
+  // generate random number
+  private int getRandomNumber(int upperBound, int lowerBound) {
+    return (int) (Math.random() * (upperBound - (lowerBound + 1)));
+  }
+
+  
+  /* 
+   Handles the guessing trials.
+   The player can guess for the number of tries permitted
+  */
   private void handleGuesses(Scanner scanner, int randomNumber, int trials) {
     System.out.println();
 
@@ -100,11 +117,11 @@ public class GuessGame {
     // prompt user to guess
     System.out.print("GUESS THE NUMBER: ");
 
-    // get guess
+    // get guess number entered
     int guess = scanner.nextInt();
 
     // get the nature of the guessed number
-    GuessedNumber guessedNumber = checkGuess(guess, randomNumber);
+    GuessedNumber guessedNumber = natureOf(guess, randomNumber);
 
     // handle the nature of the guessed message
     switch (guessedNumber) {
@@ -117,7 +134,7 @@ public class GuessGame {
       case HIGHER:
         // tell the user to guess lower
         animatePrint("LOOOWEEERRR!...", sleepLong);
-        /// let the user guess again
+        // let the user guess again
         handleGuesses(scanner, randomNumber, trials);
         break;
       // if the guessed number was lower than the random number
@@ -131,7 +148,7 @@ public class GuessGame {
   }
 
   // return the nature of the guessed number
-  private GuessedNumber checkGuess(int guess, int randomNumber) {
+  private GuessedNumber natureOf(int guess, int randomNumber) {
     if (guess == randomNumber) {
       return GuessedNumber.CORRECT;
     } else if (guess > randomNumber) {
@@ -168,9 +185,5 @@ public class GuessGame {
       sleep(sleepTime);
     }
     System.out.print("\n");
-  }
-
-  private int getRandomNumber(int upperBound, int lowerBound) {
-    return (int) (Math.random() * (upperBound - (lowerBound + 1)));
   }
 }
